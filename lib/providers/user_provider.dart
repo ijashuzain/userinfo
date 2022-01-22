@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_info/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -37,10 +38,10 @@ class UserProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       userList = [];
       List tmp = jsonDecode(response.body);
-      await _setUserListToLocal(response.body);
-      tmp.forEach((element) {
+      tmp.forEach((element) async {
         User user = User.fromJson(element);
         userList.add(user);
+        await _setUserListToLocal(user);
       });
     }
   }
@@ -58,20 +59,13 @@ class UserProvider extends ChangeNotifier {
 
   _getUserListFromLocal() async {
     print("User List from Local");
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var lst = prefs.getString('userlist');
-    userList = [];
-    List tmp = jsonDecode(lst.toString());
-    tmp.forEach((element) {
-      User user = User.fromJson(element);
-      userList.add(user);
-    });
+    var db = await Hive.openBox<User>("userlist");
+    userList = db.values.toList();
   }
 
   Future<bool> _checkUserList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var lst = prefs.getString('userlist');
-    if (lst != null) {
+    var db = await Hive.openBox<User>("userlist");
+    if (db.isNotEmpty) {
       print("User in Local");
       return true;
     } else {
@@ -80,10 +74,9 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  _setUserListToLocal(data) async {
-    print("User List Added to Local");
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('userlist', data.toString());
+  _setUserListToLocal(User data) async {
+    var db = await Hive.openBox<User>("userlist");
+    db.add(data);
   }
 
   _setUsetFetchStatus(Status status) {

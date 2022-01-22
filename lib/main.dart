@@ -1,11 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:user_info/models/user.dart';
 import 'package:user_info/providers/user_provider.dart';
 import 'package:user_info/screens/home_page.dart';
 
 Future<void> main() async {
+  await Hive.initFlutter();
+  if (!Hive.isAdapterRegistered(UserAdapter().typeId)) {
+    Hive.registerAdapter(UserAdapter());
+    Hive.registerAdapter(CompanyAdapter());
+    Hive.registerAdapter(GeoAdapter());
+    Hive.registerAdapter(AddressAdapter());
+  }
   runApp(const MyApp());
 }
 

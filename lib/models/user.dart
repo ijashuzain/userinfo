@@ -1,12 +1,25 @@
+import 'package:hive_flutter/hive_flutter.dart';
+part 'user.g.dart';
+
+@HiveType(typeId: 1)
 class User {
+  @HiveField(0)
   int? id;
+  @HiveField(1)
   String? name;
+  @HiveField(2)
   String? username;
+  @HiveField(3)
   String? email;
+  @HiveField(4)
   String? profileImage;
+  @HiveField(5)
   Address? address;
+  @HiveField(6)
   String? phone;
+  @HiveField(7)
   String? website;
+  @HiveField(8)
   Company? company;
 
   User(
@@ -55,11 +68,17 @@ class User {
   }
 }
 
+@HiveType(typeId: 2)
 class Address {
+  @HiveField(0)
   String? street;
+  @HiveField(1)
   String? suite;
+  @HiveField(2)
   String? city;
+  @HiveField(3)
   String? zipcode;
+  @HiveField(4)
   Geo? geo;
 
   Address({this.street, this.suite, this.city, this.zipcode, this.geo});
@@ -85,8 +104,11 @@ class Address {
   }
 }
 
+@HiveType(typeId: 4)
 class Geo {
+  @HiveField(0)
   String? lat;
+  @HiveField(1)
   String? lng;
 
   Geo({this.lat, this.lng});
@@ -104,9 +126,13 @@ class Geo {
   }
 }
 
+@HiveType(typeId: 3)
 class Company {
+  @HiveField(0)
   String? name;
+  @HiveField(1)
   String? catchPhrase;
+  @HiveField(2)
   String? bs;
 
   Company({this.name, this.catchPhrase, this.bs});
