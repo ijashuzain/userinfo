@@ -31,6 +31,10 @@ dependencies:
     sdk: flutter
   provider:
   http:
+  path_provider: 
+  hive: ^2.0.5 
+  shared_preferences: 
+
 
 
 

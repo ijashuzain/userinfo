@@ -26,12 +26,14 @@ class User {
     username = json['username'];
     email = json['email'];
     profileImage = json['profile_image'];
-    address =
-        json['address'] != null ? new Address.fromJson(json['address']) : null;
+    address = json['address'] != null
+        ? new Address.fromJson(json['address'])
+        : Address();
     phone = json['phone'];
     website = json['website'];
-    company =
-        json['company'] != null ? new Company.fromJson(json['company']) : null;
+    company = json['company'] != null
+        ? new Company.fromJson(json['company'])
+        : Company();
   }
 
   Map<String, dynamic> toJson() {
@@ -67,7 +69,7 @@ class Address {
     suite = json['suite'];
     city = json['city'];
     zipcode = json['zipcode'];
-    geo = json['geo'] != null ? new Geo.fromJson(json['geo']) : null;
+    geo = json['geo'] != null ? new Geo.fromJson(json['geo']) : Geo();
   }
 
   Map<String, dynamic> toJson() {

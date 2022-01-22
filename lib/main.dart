@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_info/providers/user_provider.dart';
 import 'package:user_info/screens/home_page.dart';
 
-void main() {
+Future<void> main() async {
   runApp(const MyApp());
 }
 

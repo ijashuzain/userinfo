@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:user_info/providers/user_provider.dart';
+import 'package:user_info/screens/user_details.dart';
+import 'package:user_info/utils/enums.dart';
 import 'package:user_info/widgets/user_tile.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      //
+      await context.read<UserProvider>().getUserList();
     });
     super.initState();
   }
@@ -48,13 +52,35 @@ class _HomePageState extends State<HomePage> {
         width: MediaQuery.of(context).size.width,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: ListView.builder(
-            itemCount: 5,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return UserTile();
-            },
-          ),
+          child: Consumer<UserProvider>(builder: (context, provider, child) {
+            if (provider.userFetchStatus == Status.LOADING) {
+              return Center(
+                child: CupertinoActivityIndicator(),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: provider.userList.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return UserTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserDetails(
+                            user: provider.userList[index],
+                          ),
+                        ),
+                      );
+                    },
+                    image: provider.userList[index].profileImage,
+                    title: provider.userList[index].name,
+                    subtitle: provider.userList[index].company!.name,
+                  );
+                },
+              );
+            }
+          }),
         ),
       ),
     );
