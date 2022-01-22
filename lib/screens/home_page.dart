@@ -22,6 +22,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  bool isSearching = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,14 +38,44 @@ class _HomePageState extends State<HomePage> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: IconButton(
-              onPressed: () {
-                //
-              },
-              icon: Icon(
-                Icons.search_rounded,
-              ),
-            ),
+            child: isSearching
+                ? Container(
+                    height: 30,
+                    width: 230,
+                    child: TextFormField(
+                      onChanged: (val) {
+                        if (val == "") {
+                          setState(() {
+                            isSearching = false;
+                          });
+                        }
+                        context.read<UserProvider>().searchUser(val);
+                      },
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isSearching = false;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            size: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : IconButton(
+                    onPressed: () {
+                      setState(() {
+                        isSearching = true;
+                      });
+                    },
+                    icon: Icon(
+                      Icons.search_rounded,
+                    ),
+                  ),
           ),
         ],
       ),
@@ -58,27 +90,49 @@ class _HomePageState extends State<HomePage> {
                 child: CupertinoActivityIndicator(),
               );
             } else {
-              return ListView.builder(
-                itemCount: provider.userList.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return UserTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UserDetails(
-                            user: provider.userList[index],
-                          ),
-                        ),
-                      );
-                    },
-                    image: provider.userList[index].profileImage,
-                    title: provider.userList[index].name,
-                    subtitle: provider.userList[index].company!.name,
-                  );
-                },
-              );
+              return isSearching
+                  ? ListView.builder(
+                      itemCount: provider.searchList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return UserTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UserDetails(
+                                  user: provider.searchList[index],
+                                ),
+                              ),
+                            );
+                          },
+                          image: provider.searchList[index].profileImage,
+                          title: provider.searchList[index].name,
+                          subtitle: provider.searchList[index].company!.name,
+                        );
+                      },
+                    )
+                  : ListView.builder(
+                      itemCount: provider.userList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return UserTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UserDetails(
+                                  user: provider.userList[index],
+                                ),
+                              ),
+                            );
+                          },
+                          image: provider.userList[index].profileImage,
+                          title: provider.userList[index].name,
+                          subtitle: provider.userList[index].company!.name,
+                        );
+                      },
+                    );
             }
           }),
         ),

@@ -9,6 +9,7 @@ import 'package:user_info/utils/strings.dart';
 class UserProvider extends ChangeNotifier {
   //
   List<User> userList = [];
+  List<User> searchList = [];
   Status userFetchStatus = Status.IDLE;
   //
   getUserList() async {
@@ -42,6 +43,17 @@ class UserProvider extends ChangeNotifier {
         userList.add(user);
       });
     }
+  }
+
+  searchUser(String searchText) {
+    if (userList.isNotEmpty) {
+      searchList = userList
+          .where((element) =>
+              element.name!.toLowerCase().contains(searchText.toLowerCase()) ||
+              element.email!.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
+    }
+    notifyListeners();
   }
 
   _getUserListFromLocal() async {
