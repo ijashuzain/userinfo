@@ -39,7 +39,7 @@ class UserDetails extends StatelessWidget {
                               'https://i.ibb.co/nD12BKf/userprofile.png'),
                           fit: BoxFit.cover)),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 10),
                 Text("${user!.username}"),
                 SizedBox(height: 30),
                 UserDataTile(
@@ -114,7 +114,7 @@ class UserDetails extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                "Company Details",
+                                "Company",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                 ),
